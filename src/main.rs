@@ -1,3 +1,4 @@
+mod parsers;
 use reqwest::get;
 use std::env::args;
 use tokio::join;
@@ -27,6 +28,6 @@ async fn fetch_all(word: &str) -> (String, String, String, String, String) {
 #[tokio::main]
 async fn main() {
 	let word = args().nth(1).expect("No word given!");
-	let (t1, t2, t3, t4, t5) = fetch_all(&word).await;	
-	println!("{} {} {} {} {}", t1, t2, t3, t4, t5);
+	let (t1, _t2, _t3, _t4, _t5) = fetch_all(&word).await;	
+	parsers::cambridge(&t1);
 }
