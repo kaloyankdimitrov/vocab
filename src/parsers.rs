@@ -27,6 +27,13 @@ pub fn cambridge(document: &str, cout: &mut StandardStream) {
 pub fn wordhippo(document: &str, cout: &mut StandardStream, form_type: &str) {
 	cout.set_color(ColorSpec::new().set_fg(Some(Color::Red))).unwrap();
 	let document = Document::from(document);
+	write!(cout, "{}: ", match form_type {
+		"(n.)" => "noun(s)",
+		"(v.)" => "verb(s)",
+		"(adj.)" => "adjective(s)",
+		"(adv.)" => "adverb(s)",
+		_ => panic!("Incorrect word form!")
+	}).unwrap();
 	for word in document.select(Class("defv2wordtype")) {
 		write!(cout, "{}{} ", word.text(), form_type).unwrap();
 	}
