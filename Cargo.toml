@@ -2,7 +2,15 @@
 name = "vocab"
 version = "0.1.0"
 authors = ["Kaloyan Dimitrov <kaloyankd.06@gmail.com>"]
+license = "GNU General Public License v3.0"
 edition = "2018"
+description = "A CLI tool to get definitions, examples and word forms of a given english word."
+readme = "README.md"
+homepage = "https://github.com/FreakyCoder/vocab"
+repository = "https://github.com/FreakyCoder/vocab"
+keywords = ["cli", "search", "dictionary", "word forms", "vocab", "vocabulary"]
+categories = ["command-line-utilities"]
+
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
