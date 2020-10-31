@@ -9,3 +9,5 @@ edition = "2018"
 [dependencies]
 tokio = { version="^0.2", features=["macros"] }
 reqwest = "^0.10"
+select = "^0.6.0-alpha.1"
+termcolor = "^1.1"
