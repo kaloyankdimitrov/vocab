@@ -11,8 +11,8 @@ async fn fetch(url: &str) -> Result<String, reqwest::Error> {
 async fn fetch_all(word: &str) -> (String, String, String, String, String) {
 	let urls: [&str; 5] = [
 		&format!("https://dictionary.cambridge.org/dictionary/english/{}", word)[..],
-		&format!("https://www.wordhippo.com/what-is/the-noun-for/{}.html", word)[..],
 		&format!("https://www.wordhippo.com/what-is/the-verb-for/{}.html", word)[..],
+		&format!("https://www.wordhippo.com/what-is/the-noun-for/{}.html", word)[..],
 		&format!("https://www.wordhippo.com/what-is/the-adjective-for/{}.html", word)[..],
 		&format!("https://www.wordhippo.com/what-is/the-adverb-for/{}.html", word)[..],
 	];
@@ -30,6 +30,10 @@ async fn fetch_all(word: &str) -> (String, String, String, String, String) {
 async fn main() {
 	let mut cout = StandardStream::stdout(ColorChoice::Always);
 	let word = args().nth(1).expect("No word given!");
-	let (t1, _t2, _t3, _t4, _t5) = fetch_all(&word).await;	
+	let (t1, t2, t3, t4, t5) = fetch_all(&word).await;	
 	parsers::cambridge(&t1, &mut cout);
+	parsers::wordhippo(&t2, &mut cout, "(v.)");
+	parsers::wordhippo(&t3, &mut cout, "(n.)");
+	parsers::wordhippo(&t4, &mut cout, "(adj.)");
+	parsers::wordhippo(&t5, &mut cout, "(adv.)");
 }

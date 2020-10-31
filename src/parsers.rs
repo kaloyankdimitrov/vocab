@@ -4,6 +4,7 @@ use termcolor::{Color, ColorSpec, StandardStream, WriteColor};
 use std::io::Write;
 
 pub fn cambridge(document: &str, cout: &mut StandardStream) {
+	cout.reset().unwrap();
 	let document = Document::from(document);
 	for (i, block) in document.select(Class("def-block")).enumerate() {
 		let block_document = Document::from(&block.html()[..]);
@@ -21,4 +22,13 @@ pub fn cambridge(document: &str, cout: &mut StandardStream) {
 			}
 		}
 	}
+}
+
+pub fn wordhippo(document: &str, cout: &mut StandardStream, form_type: &str) {
+	cout.set_color(ColorSpec::new().set_fg(Some(Color::Red))).unwrap();
+	let document = Document::from(document);
+	for word in document.select(Class("defv2wordtype")) {
+		write!(cout, "{}{} ", word.text(), form_type).unwrap();
+	}
+	writeln!(cout, "").unwrap();
 }
