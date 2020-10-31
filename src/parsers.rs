@@ -1,19 +1,23 @@
 use select::document::Document;
 use select::predicate::Class;
+use termcolor::{Color, ColorSpec, StandardStream, WriteColor};
+use std::io::Write;
 
-pub fn cambridge(document: &str) {
+pub fn cambridge(document: &str, cout: &mut StandardStream) {
 	let document = Document::from(document);
 	for (i, block) in document.select(Class("def-block")).enumerate() {
 		let block_document = Document::from(&block.html()[..]);
 		for definition in block_document.select(Class("def")) {
-			println!("{}. {}", i + 1, definition.text());
-			println!("Examples: ");
+			cout.set_color(ColorSpec::new().set_fg(Some(Color::Green))).unwrap();
+			writeln!(cout, "{}. {}", i + 1, definition.text()).unwrap();
+			cout.set_color(ColorSpec::new().set_fg(Some(Color::Blue))).unwrap();
+			writeln!(cout, "Examples: ").unwrap();
 			for (i, example) in block_document.select(Class("examp")).enumerate() {
 				let example_text = match i {
 					0 => example.text(),
 					_ => example.text()[1..].to_string(),
 				};
-				println!("	{}", example_text);
+				writeln!(cout, "	{}", example_text).unwrap();
 			}
 		}
 	}

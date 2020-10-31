@@ -2,6 +2,7 @@ mod parsers;
 use reqwest::get;
 use std::env::args;
 use tokio::join;
+use termcolor::{StandardStream, ColorChoice};
 
 async fn fetch(url: &str) -> Result<String, reqwest::Error> {
 	Ok(get(url).await?.text().await?)
@@ -27,7 +28,8 @@ async fn fetch_all(word: &str) -> (String, String, String, String, String) {
 
 #[tokio::main]
 async fn main() {
+	let mut cout = StandardStream::stdout(ColorChoice::Always);
 	let word = args().nth(1).expect("No word given!");
 	let (t1, _t2, _t3, _t4, _t5) = fetch_all(&word).await;	
-	parsers::cambridge(&t1);
+	parsers::cambridge(&t1, &mut cout);
 }
