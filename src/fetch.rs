@@ -1,14 +1,10 @@
-mod parsers;
 use reqwest::get;
-use std::env::args;
 use tokio::join;
-use termcolor::{StandardStream, ColorChoice};
-
 async fn fetch(url: &str) -> Result<String, reqwest::Error> {
 	Ok(get(url).await?.text().await?)
 }
 
-async fn fetch_all(word: &str) -> (String, String, String, String, String) {
+pub async fn main(word: &str) -> (String, String, String, String, String) {
 	let urls: [&str; 5] = [
 		&format!("https://dictionary.cambridge.org/dictionary/english/{}", word)[..],
 		&format!("https://www.wordhippo.com/what-is/the-verb-for/{}.html", word)[..],
@@ -24,16 +20,4 @@ async fn fetch_all(word: &str) -> (String, String, String, String, String) {
 		fetch(urls[4]),
 	);
 	(r1.unwrap(), r2.unwrap(), r3.unwrap(), r4.unwrap(), r5.unwrap()) 
-}
-
-#[tokio::main]
-async fn main() {
-	let mut cout = StandardStream::stdout(ColorChoice::Always);
-	let word = args().nth(1).expect("No word given!");
-	let (t1, t2, t3, t4, t5) = fetch_all(&word).await;	
-	parsers::cambridge(&t1, &mut cout);
-	parsers::wordhippo(&t2, &mut cout, "(v.)");
-	parsers::wordhippo(&t3, &mut cout, "(n.)");
-	parsers::wordhippo(&t4, &mut cout, "(adj.)");
-	parsers::wordhippo(&t5, &mut cout, "(adv.)");
 }
