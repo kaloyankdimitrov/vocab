@@ -2,7 +2,6 @@ mod fetch;
 mod parsers;
 use std::vec::Vec;
 
-#[derive(Debug)]
 pub struct Word {
 	pub definition_blocks: Vec<parsers::DefinitionBlock>,
 	pub verbs: Vec<String>,
@@ -23,13 +22,13 @@ impl Word {
 	}
 } 
 
-pub async fn main(input_word: &str) -> Word {
+pub async fn main(input_word: &str) -> Result<Word, reqwest::Error> {
 	let mut word = Word::new();
-	let (t1, t2, t3, t4, t5) = fetch::main(input_word).await;	
+	let (t1, t2, t3, t4, t5) = fetch::main(input_word).await?;
 	word.definition_blocks = parsers::cambridge(&t1);
 	word.verbs = parsers::wordhippo(&t2);
 	word.nouns = parsers::wordhippo(&t3);
 	word.adjectives = parsers::wordhippo(&t4);
 	word.adverbs = parsers::wordhippo(&t5);
-	word
+	Ok(word)
 }

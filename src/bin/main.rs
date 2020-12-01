@@ -4,17 +4,35 @@ use std::io::Write;
 
 #[tokio::main]
 async fn main() {
-	let input_word = args().nth(1).expect("No word given!");
 	let mut cout = StandardStream::stdout(ColorChoice::Always);
-	let word = vocab::main(&input_word).await;
+	let input_word = match args().nth(1) {
+		Some(word) => word,
+		None => {
+			// print red error
+			cout.set_color(ColorSpec::new().set_fg(Some(Color::Rgb(220, 0, 0)))).unwrap();
+			writeln!(cout, "No word given!").unwrap();
+			return
+		}
+	};
+	let word = match vocab::main(&input_word).await {
+		Ok(word) => word,
+		Err(_) => {
+			// print red error
+			cout.set_color(ColorSpec::new().set_fg(Some(Color::Rgb(220, 0, 0)))).unwrap();
+			writeln!(cout, "Could not fetch online dictionaries!").unwrap();
+			return
+		}
+	};
 	// print definitions and examples
 	for (i, definition_block) in word.definition_blocks.iter().enumerate() {
 		cout.set_color(ColorSpec::new().set_fg(Some(Color::Green))).unwrap();
 		writeln!(cout, "{}. {}", i + 1, definition_block.definition).unwrap();
 		cout.set_color(ColorSpec::new().set_fg(Some(Color::Cyan))).unwrap();
-		writeln!(cout, "Examples:").unwrap();
-		for example in definition_block.examples.iter() {
-			write!(cout, " {}", example).unwrap();
+		if definition_block.examples.len() > 0 {
+			writeln!(cout, "Examples:").unwrap();
+			for example in definition_block.examples.iter() {
+				writeln!(cout, " {}", example).unwrap();
+			}
 		}
 		writeln!(cout).unwrap();
 	}

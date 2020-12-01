@@ -2,7 +2,6 @@ use select::document::Document;
 use select::predicate::Class;
 use std::{vec::Vec, string::String};
 
-#[derive(Debug)]
 pub struct DefinitionBlock {
 	pub definition: String,
 	pub examples: Vec<String>,
@@ -20,19 +19,19 @@ impl DefinitionBlock {
 pub fn cambridge(document: &str) -> Vec<DefinitionBlock> {
 	let document = Document::from(document);
 	let mut definitions: Vec<DefinitionBlock> = Vec::new();
-	for (i, block) in document.select(Class("def-block")).enumerate() {
-		definitions.push(DefinitionBlock::new());
+	for block in document.select(Class("def-block")) {
 		let block_document = Document::from(&block.html()[..]);
-		for definition in block_document.select(Class("def")) {
-			definitions[i].definition = definition.text();
+		if let Some(definition) = block_document.select(Class("def")).next() {
+			definitions.push(DefinitionBlock::new());
+			definitions.last_mut().unwrap().definition = definition.text();
 			for (ei, example) in block_document.select(Class("examp")).enumerate() {
 				let example_text = match ei {
 					0 => example.text(),
 					_ => example.text()[1..].to_string(),
 				};
-				definitions[i].examples.push(example_text);
+				definitions.last_mut().unwrap().examples.push(example_text);
 			}
-		}
+		} 
 	}
 	definitions
 }

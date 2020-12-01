@@ -4,7 +4,7 @@ async fn fetch(url: &str) -> Result<String, reqwest::Error> {
 	Ok(get(url).await?.text().await?)
 }
 
-pub async fn main(word: &str) -> (String, String, String, String, String) {
+pub async fn main(word: &str) -> Result<(String, String, String, String, String), reqwest::Error> {
 	let urls: [&str; 5] = [
 		&format!("https://dictionary.cambridge.org/dictionary/english/{}", word)[..],
 		&format!("https://www.wordhippo.com/what-is/the-verb-for/{}.html", word)[..],
@@ -19,5 +19,5 @@ pub async fn main(word: &str) -> (String, String, String, String, String) {
 		fetch(urls[3]),
 		fetch(urls[4]),
 	);
-	(r1.unwrap(), r2.unwrap(), r3.unwrap(), r4.unwrap(), r5.unwrap()) 
+	Ok((r1?, r2?, r3?, r4?, r5?))
 }
