@@ -25,7 +25,7 @@ jobs:
         uses: svenstaro/upload-release-action@v1-release
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: target/release/vocab
+          file: target/release/cli
           asset_name: vocab-linux-amd64
           tag: ${{ steps.bump_version.outputs.new_tag }}
           overwrite: true
